@@ -3,32 +3,37 @@
  * Login script.
  */
 
-include '../../static/php/DBConnection.php';
+include_once '../../config/configs.php';
+include_once '../../static/php/DBConnection.php';
 session_start();
 
 if(!empty($_POST)) {
+    $dbConnection = new DBConnection($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_NAME);
     $username = $_POST['u_name'];
 
-    //$queryString = "SELECT id, password FROM registered_users WHERE `name` = ";
-    $queryString = "SELECT uId, pWordHash FROM loginTable WHERE uId = (
-                          SELECT uId FROM userNames WHERE uName = ?)";
+    $queryString = "SELECT user_id, is_admin FROM users WHERE username = ?";
     $types = 's';
     $vars = array($username);
-    $dbConnection = new DBConnection();
-    $result = $dbConnection->executePreparedSelect($queryString, $types, $vars, $id, $password);
-    $result->fetch();
+    $result = $dbConnection->executePreparedSelect($queryString, $types, $vars, $id, $isAdmin);
 
-    //echo $_POST['passwordIn'];
-    ///echo $password;
-    if(password_verify($_POST['u_pass'], $password)) {
-        $_SESSION['s_user'] = $_POST['u_name'];
-        $_SESSION['s_id'] = $id;
-        header('Location: ../mySchedule.php');
+    if (!$result->fetch()) {
+        $queryString = "SELECT password FROM passwords WHERE user_id = ?";
+        $vars = array($id);
+        $result = $dbConnection->executePreparedSelect($queryString, 's', $vars, $password);
+        $result->fetch();
+        if (password_verify($_POST['u_pass'], $password)) {
+            $_SESSION['s_user'] = $_POST['u_name'];
+            $_SESSION['s_id'] = $id;
+            $_SESSION['is_admin'] = $isAdmin;
+            header('Location: ../landingPage.php');
+        } else {
+            header('Location: ../../index.html');
+        }
     } else {
-        echo 'Invalid username or password';
+        header('Location: ../../index.html');
     }
 } else {
-    echo 'Invalid username or password';
+    header('Location: ../../index.html');
 }
 
 
