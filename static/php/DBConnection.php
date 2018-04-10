@@ -37,22 +37,16 @@ class DBConnection
         }
 
         $sqlStatement = $this->dbConnection->prepare($queryString);
-        if($sqlStatement === false) {
-            echo $sqlStatement->error;
-        } else {
-            if (!$sqlStatement->bind_param($types, ...$vars)) {
-                echo 'Unable to bind_param: '. $sqlStatement->errno . ":" .$sqlStatement->error."<br>";
-            }
-            $sqlStatement->execute();
-            $sqlStatement->store_result();
-            $sqlStatement->bind_result(...$results);
-        }
+        $sqlStatement->bind_param($types, ...$vars);
+
+        $sqlStatement->execute();
+        $sqlStatement->store_result();
+        $sqlStatement->bind_result(...$results);
         return $sqlStatement;
     }
 
     /**
      * Execute a prepared statement without bound results.
-     * TODO error handling.
      * @param string $queryString
      * @param string $types
      * @param array ...$vars
