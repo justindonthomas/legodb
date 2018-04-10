@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- Screen for logging in a user -->
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="static/css/loginForm.css">
+</head>
+<body>
+    <div class="form">
+        <fieldset>
+          <legend>&nbsp;LOGIN&nbsp;</legend>
+	  <!-- Use my implemented login.
+	       For scheduler, use login.unm.edu's interface/query string. -->
+            <form name="login" action="views/pageScripts/login.php" method="post">
+                <input name="u_name" type="text" placeholder="username"><br />
+                <input name="u_pass" type="password" placeholder="password"><br />
+                <input name="submit" type="submit" />
+            </form>
+        </fieldset>
+    </div>
+    <div id="response"></div>
+    <script type="text/javascript" src="lib/js/jquery-3.2.1.js"></script>
+</body>
+</html>
