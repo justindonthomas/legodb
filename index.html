@@ -19,5 +19,22 @@
         </fieldset>
     </div>
     <div id="response"></div>
+    <script type="text/javascript" src="lib/jquery-3.3.1.min.js"></script>
+    <script>
+        $('form').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.post("views/pageScripts/login.php",
+                formData,
+                function(data) {
+                    if (data == 'Success') {
+                        window.location = 'views/landingPage.php';
+                    } else {
+                        $("#response").html(data);
+                    }
+                }
+            );
+        });
+    </script>
 </body>
 </html>

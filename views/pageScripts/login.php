@@ -11,12 +11,13 @@ if(!empty($_POST)) {
     $dbConnection = new DBConnection($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_NAME);
     $username = $_POST['u_name'];
 
+
     $queryString = "SELECT user_id, is_admin FROM users WHERE username = ?";
     $types = 's';
     $vars = array($username);
     $result = $dbConnection->executePreparedSelect($queryString, $types, $vars, $id, $isAdmin);
-
-    if (!$result->fetch()) {
+    $result->fetch();
+    if ($id != null) {
         $queryString = "SELECT password FROM passwords WHERE user_id = ?";
         $vars = array($id);
         $result = $dbConnection->executePreparedSelect($queryString, 's', $vars, $password);
@@ -25,15 +26,16 @@ if(!empty($_POST)) {
             $_SESSION['s_user'] = $_POST['u_name'];
             $_SESSION['s_id'] = $id;
             $_SESSION['is_admin'] = $isAdmin;
-            header('Location: ../landingPage.php');
+            //header('Location: ../landingPage.php');
+            echo 'Success';
         } else {
-            header('Location: ../../index.html');
+            echo 'Invalid name or password.';
         }
     } else {
-        header('Location: ../../index.html');
+        echo 'Invalid name or password.';
     }
 } else {
-    header('Location: ../../index.html');
+    echo 'Invalid name or password.';
 }
 
 
