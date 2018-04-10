@@ -3,7 +3,6 @@
  * Add a user and password to the database.
  */
 
-//TODO test me!
 include_once '../../static/php/DBConnection.php';
 include_once '../../config/configs.php';
 
