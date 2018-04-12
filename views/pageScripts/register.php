@@ -12,7 +12,7 @@ if(!empty($_POST)) {
     $uname = $_POST['name'];
     $uemail = $_POST['email'];
     $upassword = password_hash($_POST['passwordIn'], PASSWORD_DEFAULT);
-    echo $uname." ".$uemail." ".$upassword."<br>";
+    //echo $uname." ".$uemail." ".$upassword."<br>";
 
     $queryString = "INSERT INTO users (username, email) VALUES (?,?)";
 
