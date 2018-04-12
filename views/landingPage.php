@@ -1,7 +1,10 @@
 <?php
-
-
+include_once "pageScripts/LandingPageBuilder.php";
 session_start();
+if (!isset($_SESSION['s_user'])) {
+      header('location: ../index.html');
+}
+$pageBuilder = new LandingPageBuilder($_SESSION);
 
 ?>
 <!DOCTYPE html>
@@ -11,10 +14,11 @@ session_start();
       <link href="../static/css/standard_styles.css" rel="stylesheet">
   </head>
   <body>
-  <span class="leftalign"> Logged in as: <?php echo $_SESSION['s_user']; ?></span>
-  <span class="rightalign"><a href="pageScripts/logout.php">Log Out.</a></span> <br>
-  <p>Login successful <p>
-      <!-- TODO build base page here.-->
+  <?php
+
+  echo $pageBuilder->getTopBar(); ?>
+
+
   Is admin: <?php if ($_SESSION['is_admin'] == 1) {
       echo "Yes<br>";
       } elseif ($_SESSION['is_admin'] == 0) {
