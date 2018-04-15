@@ -44,6 +44,9 @@ SELECT username, is_admin, email FROM users AS info WHERE email like '%awesome%'
 /* Get all the usernames and email addresses of users who have a favorite set. */
 SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id from favorite_sets);
 
+/* Get all the usernames and email addresses of users who don't have a favorite set. */
+SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id where comment = NULL);
+
 			
 /*
 PASSWORDS
@@ -84,6 +87,10 @@ UPDATE favorite_sets SET comment = 'woof!' WHERE favorite_sets.user_id in (SELEC
 
 UPDATE favorite_sets SET set_id = 3345, comment = 'Battle of Helm\'s Deep' WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'justin');
 
+UPDATE favorite_sets SET set_id = 224, comment = 'NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA LOBSTER! LOBSTER!' WHERE user_id = 5;
+
+DELETE FROM favorite_sets WHERE favorite_sets.set_id in (SELECT sets.set_id WHERE set_name like 'Pooh\'s Corner');
+
 UPDATE favorite_sets SET set_id = 4586, comment = 'Tower of Orthanc, Minifigs = Gandalf the Grey, Saruman the White, Orc x 2' WHERE favorite_id = 3 and favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'elyzabeth');
 
 DELETE FROM favorite_sets where user_id = 4;
@@ -99,6 +106,18 @@ SELECT MAX(favorite_id) FROM favorite_sets;
 
 /* Get the row with id of the user with the minimum id number (first user added). */
 SELECT * from favorite_sets WHERE favorite_id = (SELECT MIN(favorite_id) FROM favorite_sets);
+
+
+/* */
+SELECT
+
+
+/* */
+SELECT
+
+
+/* */
+SELECT (SELECT)
 
 			
 /*
