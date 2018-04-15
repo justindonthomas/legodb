@@ -22,4 +22,16 @@ class LandingPageBuilder
         return '<span class="leftalign"> Logged in as: '.$this->userName.'</span>
                 <span class="rightalign"><a href="pageScripts/logout.php">Log Out.</a></span> <br>';
     }
+
+    public function getSearchOptions() {
+        $optionsString = 'Search For: <select name="search">
+                <option value="minifig"> minifig </option>
+                <option value="set"> set </option>
+                <option value="part"> part </option>';
+        if($this->isAdmin) {
+            $optionsString = $optionsString.'<option value="user"> user </option>';
+        }
+        $optionsString = $optionsString.'</select>';
+        return $optionsString;
+    }
 }
