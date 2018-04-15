@@ -42,7 +42,7 @@ SELECT email FROM users ORDER BY user_id DESC LIMIT 1;
 SELECT username, is_admin, email FROM user AS info WHERE email like '%awesome%'; 
 
 /* Get all the usernames and email addresses of users who don't have a favorite set. */
-SELECT username, email from users where users.username in (SELECT ) #chain a selection here
+SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id where comment = NULL);
 
 			
 /*
@@ -80,18 +80,22 @@ INSERT INTO favorite_sets (user_id, set_id) ((SELECT user_id FROM users WHERE us
 
 UPDATE favorite_sets SET set_id = 3345 WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'justin');
 
-UPDATE favorite_sets SET set_id = , comment = 'I hate LEGOs!' WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'ihatelegos');
+UPDATE favorite_sets SET set_id = 224, comment = 'NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA LOBSTER! LOBSTER!' WHERE user_id = 5;
 
-DELETE FROM 
+DELETE FROM favorite_sets WHERE favorite_sets.set_id in (SELECT sets.set_id WHERE set_name like 'Pooh\'s Corner');
 
-/* */
-SELECT
 
 /* */
 SELECT
 
+
 /* */
 SELECT
+
+
+/* */
+SELECT
+
 
 /* */
 SELECT (SELECT)
