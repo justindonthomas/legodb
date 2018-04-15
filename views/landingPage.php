@@ -15,8 +15,9 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
   </head>
   <body>
   <?php
-
-  echo $pageBuilder->getTopBar(); ?>
+  echo $pageBuilder->getTopBar();
+  echo $pageBuilder->getSearchOptions();
+  ?>
 
 
   Is admin: <?php if ($_SESSION['is_admin'] == 1) {
