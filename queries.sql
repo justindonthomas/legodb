@@ -41,8 +41,8 @@ SELECT email FROM users ORDER BY user_id DESC LIMIT 1;
 /* Get the username, admin status, and email of the user(s) whose email contains any capitalization of the word 'awesome'*/
 SELECT username, is_admin, email FROM users AS info WHERE email like '%awesome%'; 
 
-/* Get all the usernames and email addresses of users who don't have a favorite set. */
-SELECT username, email from users where users.username in (SELECT ) #chain a selection here
+/* Get all the usernames and email addresses of users who have a favorite set. */
+SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id from favorite_sets);
 
 			
 /*
@@ -76,25 +76,29 @@ FAVORITE SETS
 ---------------
 */
 
-INSERT INTO favorite_sets (user_id, set_id) ((SELECT user_id FROM users WHERE username = 'elyzabeth'), (SELECT set_id FROM sets WHERE set_name like 'Tower of Orthanc'));
+INSERT INTO favorite_sets (user_id, set_id) VALUES ((SELECT user_id FROM users WHERE username = 'elyzabeth'), (SELECT set_id FROM sets WHERE set_name like 'Tower of Orthanc'));
 
-UPDATE favorite_sets SET set_id = 3345 WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'justin');
+INSERT INTO favorite_sets (user_id, set_id, comment) VALUES ((SELECT user_id FROM users WHERE username = 'elyzabeth'), (SELECT set_id FROM sets WHERE set_name like 'Black Gate'), 'Battle at the Black Gate');
 
-UPDATE favorite_sets SET set_id = , comment = 'I hate LEGOs!' WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'ihatelegos');
+UPDATE favorite_sets SET comment = 'woof!' WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username like '%bobo%');
 
-DELETE FROM 
+UPDATE favorite_sets SET set_id = 3345, comment = 'Battle of Helm\'s Deep' WHERE favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'justin');
 
-/* */
-SELECT
+UPDATE favorite_sets SET set_id = 4586, comment = 'Tower of Orthanc, Minifigs = Gandalf the Grey, Saruman the White, Orc x 2' WHERE favorite_id = 3 and favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'elyzabeth');
 
-/* */
-SELECT
+DELETE FROM favorite_sets where user_id = 4;
 
-/* */
-SELECT
+/* Join the favorite_sets and users column on id but filter by users who have a favorite set. Get all matching columns from both tables.*/
+SELECT * FROM favorite_sets RIGHT JOIN users on favorite_sets.user_id = users.user_id WHERE favorite_sets.set_id IS NOT NULL ORDER BY set_id;
 
-/* */
-SELECT (SELECT)
+/*Get the ratio of favorite sets that have comments. Count the numerator as a tenth to make it work.*/
+SELECT (SELECT COUNT(comment) * 100.0 FROM favorite_sets) / (SELECT COUNT(favorite_id) * 100.0 FROM favorite_sets) AS comment_percent;
+
+/*Get the highest id in the table (id of most recently added user). */
+SELECT MAX(favorite_id) FROM favorite_sets;
+
+/* Get the row with id of the user with the minimum id number (first user added). */
+SELECT * from favorite_sets WHERE favorite_id = (SELECT MIN(favorite_id) FROM favorite_sets);
 
 			
 /*
@@ -102,7 +106,7 @@ SETS
 ---------------
 */
 
-INSERT 
+INSERT INTO sets ()
 
 UPDATE
 
