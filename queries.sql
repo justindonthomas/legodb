@@ -39,7 +39,7 @@ SELECT username FROM users WHERE is_admin = 1;
 SELECT email FROM users ORDER BY user_id DESC LIMIT 1; 
 
 /* Get the username, admin status, and email of the user(s) whose email contains any capitalization of the word 'awesome'*/
-SELECT username, is_admin, email FROM user AS info WHERE email like '%awesome%'; 
+SELECT username, is_admin, email FROM users AS info WHERE email like '%awesome%'; 
 
 /* Get all the usernames and email addresses of users who don't have a favorite set. */
 SELECT username, email from users where users.username in (SELECT ) #chain a selection here
