@@ -107,27 +107,15 @@ SELECT MAX(favorite_id) FROM favorite_sets;
 /* Get the row with id of the user with the minimum id number (first user added). */
 SELECT * from favorite_sets WHERE favorite_id = (SELECT MIN(favorite_id) FROM favorite_sets);
 
-
-/* */
-SELECT
-
-
-/* */
-SELECT
-
-
-/* */
-SELECT (SELECT)
-
 			
 /*
 SETS
 ---------------
 */
 
-INSERT INTO sets ()
+INSERT INTO sets (set_name, year_released) VALUES ('Knights of the Frozen Throne', '2017');
 
-UPDATE
+UPDATE sets SET year_released = '2016' WHERE set_name = 'Knights of the Frozen Throne';
 
 UPDATE
 
