@@ -24,14 +24,14 @@ class LandingPageBuilder
     }
 
     public function getSearchOptions() {
-        $optionsString = 'Search For: <select name="search">
+        $optionsString = '
+                <option value = ""></option>
                 <option value="minifig"> minifig </option>
                 <option value="set"> set </option>
                 <option value="part"> part </option>';
         if($this->isAdmin) {
             $optionsString = $optionsString.'<option value="user"> user </option>';
         }
-        $optionsString = $optionsString.'</select>';
         return $optionsString;
     }
 }

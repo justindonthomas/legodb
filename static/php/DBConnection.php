@@ -78,4 +78,13 @@ class DBConnection
         return $this->dbConnection->error;
     }
 
+    /**
+     * Clean and return a submitted string.
+     * @param string $str String to clean.
+     * @return string Cleaned string
+     */
+    public function getEscapedString(string $str) {
+        return $this->dbConnection->real_escape_string($str);
+    }
+
 }
