@@ -32,10 +32,7 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
       Search term:<input type="text" id="searchTerms">
       <input type="submit">
   </form>
+  <div id="results"></div>
   <script type="text/javascript" src="../static/js/searchController.js"></script>
-  <script>
-
-  </script>
-
   </body>
 </html>

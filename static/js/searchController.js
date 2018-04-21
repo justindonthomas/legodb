@@ -10,7 +10,7 @@ $("#searchForm").submit(function(event) {
             searchby : searchBy,
             searchterms: searchTerms
         }, function(data) {
-            console.log(data.toString());
+            $("#results").html(data);
         } );
 });
 
@@ -20,7 +20,7 @@ $("#searchForm").submit(function(event) {
 
 function createSearchByDropdown(searchFor, searchBy) {
     var userSearchTerms = ['user name', 'email'];
-    var standardSearchTerms = ['part id', 'description contains'];
+    var standardSearchTerms = ['part id', 'description', 'year'];
     searchBy.options.length = 0;
     switch(searchFor.value) {
         case "user":
