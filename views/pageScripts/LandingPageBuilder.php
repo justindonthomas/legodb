@@ -28,7 +28,9 @@ class LandingPageBuilder
                 <option value = ""></option>
                 <option value="minifig"> minifig </option>
                 <option value="set"> set </option>
-                <option value="part"> part </option>';
+                <option value="set inventory"> set inventory </option>
+                <option value="minifig inventory"> minifig inventory </option>
+                <option value="my favorites"> my favorites </option>';
         if($this->isAdmin) {
             $optionsString = $optionsString.'<option value="user"> user </option>';
         }

@@ -14,13 +14,9 @@ $("#searchForm").submit(function(event) {
         } );
 });
 
-/*function searchResponse(data) {
-    console.log(data);
-}*/
-
 function createSearchByDropdown(searchFor, searchBy) {
     var userSearchTerms = ['user name', 'email'];
-    var standardSearchTerms = ['part id', 'description', 'year'];
+    var standardSearchTerms = ['part id', 'description', 'year', 'theme'];
     searchBy.options.length = 0;
     switch(searchFor.value) {
         case "user":
@@ -29,6 +25,11 @@ function createSearchByDropdown(searchFor, searchBy) {
                 searchBy.options.add(createListOption(userSearchTerms[i]));
             }
             break;
+        case "minifig inventory":
+        case "set inventory":
+            searchBy.options.add(createListOption('part id'));
+            break;
+        case "my favorites":
         case "":
             searchBy.options.length=0;
             break;

@@ -1,6 +1,7 @@
 <?php
 include_once '../../config/configs.php';
 include_once '../../static/php/DBConnection.php';
+session_start();
 
 $dbConnection = new DBConnection($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_NAME);
 
@@ -25,12 +26,13 @@ function performSearch(DBConnection $dbConn, string $searchFor, string $searchBy
         case 'minifig':
             return minifigSearch($dbConn, $searchBy, $searchTerms);
         case 'set':
-            //return $searchFor.' '.$searchBy.' '.$searchTerms;
             return setSearch($dbConn, $searchBy, $searchTerms);
-        case 'part':
-            return 'parts';
-        case 'user':
-            return 'users';
+        case 'my favorites':
+            return favoritesSearch($dbConn, $_SESSION['s_id']);
+        case 'set inventory':
+            return setInventorySearch($dbConn, $searchBy, $searchTerms);
+        case 'minifig inventory':
+            return minifigInventorySearch($dbConn, $searchBy, $searchTerms);
         default:
             return '';
     }
@@ -51,9 +53,11 @@ function minifigSearch(DBConnection $dbConn, string $searchBy, string $searchTer
         case 'description':
             return descriptionSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'description');
         case 'theme':
-            //search theme
+            return descriptionSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'theme_name');
         case 'year':
-            //search year.
+            return strEquivalenceSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'year_released');
+        case 'part id':
+            return strEquivalenceSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'minifig_part_number');
         default:
             return '';
     }
@@ -75,12 +79,77 @@ function setSearch(DBConnection $dbConn, string $searchBy, string $searchTerms) 
         case 'description':
             return descriptionSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'set_name');
         case 'theme':
-            //search theme
+            return descriptionSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'theme_name');
         case 'year':
-            //search year.
+            return strEquivalenceSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'year_released');
+        case 'part id':
+            return strEquivalenceSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'set_num');
         default:
             return '';
     }
+}
+
+/**
+ * Get the part inventory for a set.
+ * @param DBConnection $dbConn mysqli connection.
+ * @param string $searchBy which term to search on, name or number.
+ * @param string $searchTerms Term to match when searching.
+ * @return string html table representing the search results.
+ */
+function setInventorySearch(DBConnection $dbConn, string $searchBy, string $searchTerms) {
+    $columnNames = array('part number', 'part description', 'color', 'quantity', 'is spare');
+    $whereColumn = ' set_id = ';
+    $param = $whereColumn."'".$searchTerms."')";
+    $queryBase = "SELECT parts.part_number, part_name, color_name, quantity, is_spare_part FROM set_contents
+                  INNER JOIN colors ON set_contents.color_id = colors.color_id
+                  INNER JOIN parts ON set_contents.part_number = parts.part_number
+                  WHERE set_id = (SELECT set_id FROM sets WHERE ";
+    $queryString = $queryBase.$param;
+     //return $queryString;
+    return buildTableString($dbConn->executeSimpleQuery($queryString), $columnNames);
+}
+
+function minifigInventorySearch(DBConnection $dbConn, string $searchBy, string $searchTerms) {
+    $columnNames = array('part number', 'part description');
+
+    $whereColumn = ' minifig_part_number = ';
+    $param = $whereColumn."'".$searchTerms."')";
+    $queryBase = "SELECT parts.part_number, part_name FROM minifig_contents
+                  INNER JOIN minifigs ON minifig_contents.minifig_id = minifigs.minifig_id
+                  INNER JOIN parts ON minifig_contents.part_number = parts.part_number
+                  WHERE minifigs.minifig_id = (SELECT minifig_id FROM minifigs WHERE ";
+    $queryString = $queryBase.$param;
+    return buildTableString($dbConn->executeSimpleQuery($queryString), $columnNames);
+}
+/**
+ * Get the current user's favorite sets.
+ * @param DBConnection $dbConn Mysqli db connection
+ * @param string $userId User id from the session object.
+ * @return string Html table representing search results.
+ */
+function favoritesSearch(DBConnection $dbConn, string $userId) {
+    $columnNames = array('set number', 'name', 'theme', 'year released');
+    $queryString = "SELECT set_num, set_name, theme_name, year_released FROM sets 
+                    INNER JOIN themes ON sets.theme_id = themes.theme_id
+                    WHERE set_id IN (SELECT set_id FROM favorite_sets WHERE user_id = ".$userId.")";
+    return buildTableString($dbConn->executeSimpleQuery($queryString), $columnNames);
+}
+
+/**
+ * Perform a search on a given values equivalence in a given column (WHERE clause uses =).
+ * @param DBConnection $dbConn Mysqli connection.
+ * @param string $queryBase First part of the query string (before the where clause).
+ * @param string $searchTerms Term to compare to.
+ * @param array $columnNames Column names to use in the html table.
+ * @param string $matchColName column name to match on.
+ * @return string html table containing the search results.
+ */
+function strEquivalenceSearch(DBConnection $dbConn, string $queryBase, string $searchTerms, array $columnNames,
+                              string $matchColName) {
+    $param = "'".$searchTerms."'";
+    $queryString = $queryBase.' WHERE '.$matchColName.' = '.$param;
+    $result = $dbConn->executeSimpleQuery($queryString);
+    return buildTableString($result, $columnNames);
 }
 
 /**
