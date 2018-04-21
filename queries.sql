@@ -109,7 +109,7 @@ SELECT * from favorite_sets WHERE favorite_id = (SELECT MIN(favorite_id) FROM fa
 
 			
 /*
-SETS
+SETS*
 ---------------
 */
 
@@ -117,46 +117,53 @@ INSERT INTO sets (set_name, year_released) VALUES ('Knights of the Frozen Throne
 
 UPDATE sets SET year_released = '2016' WHERE set_name = 'Knights of the Frozen Throne';
 
-UPDATE
+UPDATE sets SET set_name = (SELECT set_name + ' 2016 release') WHERE year_released = 2016;
 
-DELETE
+DELETE FROM sets WHERE set_name like '%Knights of the Frozen Throne%';
 
-/* */
-SELECT
+/* Get all sets and order by the most recently released.*/
+SELECT * FROM sets ORDER BY year_released DESC;
 
-/* */
-SELECT
+/* Get the names of sets and the year released for sets released between 1954 and 1955.*/
+SELECT set_name AS 1954_to_1955_sets, year_released FROM sets WHERE year_released >= 1954 AND year_released <= 1955;
 
-/* */
-SELECT
+/* Get the set numbers and names of all sets that have a match on wheel, sany number of characters, ring, and any number of characters
+(Retrieve sets with wheels and bearings for vehicles), ordered by the most recent release.*/
+SELECT set_num, set_name from sets WHERE set_name like 'wheel%ring%' ORDER BY year_released;
 
-/* */
-SELECT (SELECT)
+/* Get all columns from the set table where the set_id matches a set_id of a favorite set chosen by the user. 
+(Info on everyone's favorite sets)*/
+SELECT * FROM sets WHERE set_id in (SELECT favorite_sets.set_id FROM favorite_sets);
 
 /*
 THEMES
 ---------------
 */
 
-INSERT 
+#Parent ID: When a theme is a subset of another theme, the parent id refers to the larger theme,
+#For this theme, the parent id could be #568 (The Two Towers).
+INSERT INTO themes (theme_name, theme_parent_id) VALUES ('"They\re Taking the Hobbits to Isengard!"', 568);
 
-UPDATE
+#Set the parent theme of this theme to 566, The Lord of the Rings.
+UPDATE themes SET theme_parent_id = 566 WHERE theme_name = '"They\re Taking the Hobbits to Isengard!"';
 
-UPDATE
+#608 is parent theme Disney
+UPDATE themes SET theme_parent_id = 608 WHERE theme_name like '%Disney%';
 
-DELETE
+#Delete cowboys and indians that weren't in the LEGO movie.
+DELETE FROM themes WHERE theme_parent_id NOT IN (535) AND theme_parent_id IN (475);
 
-/* */
-SELECT
+/* Get all the superheor set themes that end in 'man'*/
+SELECT theme_name AS man_heroes FROM themes WHERE theme_name LIKE '%man' AND theme_parent_id = 482;
 
-/* */
-SELECT
+/* Get all the Series minifig themes and their ids and sort by name.*/
+SELECT theme_id AS id, theme_name AS series_minifigs FROM themes WHERE theme_name like 'series%minifig%' ORDER BY theme_name;
 
-/* */
-SELECT
+/*Get all the info on all the sets with the the parent theme Lord of the Rings that were released after 2010.*/
+SELECT * FROM themes RIGHT JOIN sets on themes.theme_id = sets.theme_id WHERE sets.year_released > 2010 AND themes.theme_parent_id = 566;
 
-/* */
-SELECT (SELECT)
+/* Get the names of the themes of the Favorite sets chosen by the users.*/
+SELECT theme_name AS user_favorite_themes, theme_id FROM themes WHERE theme_id IN (SELECT sets.theme_id FROM sets WHERE sets.set_id IN (SELECT set_id FROM favorite_sets));
 
 /*
 SET_CONTENTS
@@ -284,7 +291,7 @@ SELECT (SELECT)
 
 
 /*
-COLORS
+COLORS GET TABLE BEFORE INSERTION
 ---------------
 */
 
