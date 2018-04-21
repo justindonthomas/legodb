@@ -5,19 +5,8 @@ Final Project
 queries.sql
 
 #NOTE: Required statments of intent for SELECT queries are written inline as comments.
-
-
-OVERALL
-----------------
-Indices - You must create at least 2 indices that are not based on primary keys for your database.  
-			CREATE INDEX name_index ON Employee (Employee_Name)
-			SELECT * FROM table1 USE INDEX (col1_index,col2_index) WHERE col1=1 AND col2=2 AND col3=3;
-			SELECT * FROM table1 IGNORE INDEX (col3_index) WHERE col1=1 AND col2=2 AND col3=3;
-			Choose your table(s) and write a statement for each index as to why it is appropriate.  Run a query before and after the index and add the differences in performance to your statement.
-ORDERS - You must use ORDER BY at least once and should use it wherever appropriate
-			2.2.a.4 - LIMIT - You must use LIMIT at least once and should use it wherever appropriate
-			2.2.a.5 - Aggregate Functions - You must use aggregate functions (AVG, COUNT, MIN, MAX, SUM) at least once each and should use them wherever appropriate
-*/
+# Some INSERT and UPDATE queries are also commented when the operation's intent is not immediately obvious from the syntax.
+# Indices are at the end.
 
 /*
 USERS
@@ -153,6 +142,7 @@ UPDATE themes SET theme_parent_id = 608 WHERE theme_name like '%Disney%';
 #Delete cowboys and indians that weren't in the LEGO movie.
 DELETE FROM themes WHERE theme_parent_id NOT IN (535) AND theme_parent_id IN (475);
 
+
 /* Get all the superheor set themes that end in 'man'*/
 SELECT theme_name AS man_heroes FROM themes WHERE theme_name LIKE '%man' AND theme_parent_id = 482;
 
@@ -169,47 +159,50 @@ SELECT theme_name AS user_favorite_themes, theme_id FROM themes WHERE theme_id I
 SET_CONTENTS
 ---------------
 */
+#Insert two spare Minifig Wizard hats into set Tower of Orthanc.
+INSERT INTO set_contents (set_id, part_number, quantity, is_spare_part) VALUES (4586, 6131, 2, 1);
 
-INSERT 
+UPDATE set_contents SET is_spare_part = 0 WHERE set_id = 4586 AND part_number = 6131;
 
-UPDATE
+#9999 is no color and -1 is unknown. Merge Null values
+UPDATE set_contents SET color_id = 9999 WHERE color_id = -1;
 
-UPDATE
+DELETE FROM set_contents WHERE set_id IS NULL OR part_number IS NULL or color_id IS NULL;
 
-DELETE
+#Give all the info from the set_contents and colors table on spare parts that come in quantites of 10 or greater. 
+SELECT * FROM set_contents JOIN colors on set_contents.color_id = colors.color_id WHERE set_contents.quantity >= 10 AND set_contents.is_spare_part = 1;
 
-SELECT
-
-SELECT
-
-SELECT
-
-SELECT (SELECT)
+#Get the first 10 results of the number of different types of parts in each set. 
+SELECT set_id, COUNT(set_id) AS types_of_parts FROM set_contents GROUP BY set_id LIMIT 10;
 
 /*
 PARTS
 ---------------
 */
 
-INSERT 
+#13 is the part_category_id for minifigs.
+INSERT INTO parts VALUES (13, 'Microfig Head dual sided Gandalf the White, smile/angry')
 
-UPDATE
+INSERT INTO parts VALUES (0, 'deletable entry');
 
-UPDATE
+#Move minifg accessories into the broader minfig category.
+UPDATE parts SET part_category_id = 13 WHERE part_category_id = 27;
 
-DELETE
+UPDATE parts SET part_category_id = 43 WHERE part_name like '%saruman%';
 
-/* */
-SELECT
+DELETE FROM parts WHERE part_name like 'deletable%';
 
-/* */
-SELECT
-
-/* */
-SELECT
+/* Get the number of parts in each category and their description.*/
+SELECT part_category_id AS id, COUNT(part_category_id) AS num_in_cat, part_name AS cat_name FROM parts GROUP BY part_category_id;
 
 /* */
-SELECT (SELECT)
+SELECT COUNT(part_name) AS num_brick_type_categories FROM parts WHERE part_name like '%Bricks%';
+
+/* Get ids and names of parts that start with zbb, parts with category ids greater than or equal to 15, parts with names including the words horse, elf, or tree, but not parts including the word tiger and order them by id.*/
+SELECT part_category_id AS id, part_name AS name FROM parts WHERE part_number like 'zbb%' OR part_category_id >= 15 OR part_name like '%horse%' OR part_name like 'elf' OR part_name like 'tree' AND part_name NOT like '%tiger%' ORDER BY id;
+
+/* Get the first 20 name entries for just minifig parts.*/
+SELECT part_name AS minifig_parts FROM parts WHERE parts.part_category_id IN (SELECT part_categories.part_category_id FROM part_categories WHERE part_categories.part_category_name like '%minifig%') LIMIT 20;
 
 
 /*
@@ -217,25 +210,22 @@ PART_CATEGORIES
 ---------------
 */
 
-INSERT 
+INSERT INTO part_categories VALUES ('Other');
 
-UPDATE
+UPDATE part_categories SET part_category_name = 'Bricks, Curved' WHERE part_category_name = 'Bricks Curved';
 
-UPDATE
+UPDATE part_categories SET part_category_name = 'Rocks' WHERE part_category_name = 'Rock';
 
-DELETE
+DELETE FROM part_categories WHERE part_categories = 'Non-LEGO';
 
-/* */
-SELECT
+/* Get all the part categories that have to do with bricks.*/
+SELECT * FROM part_categories WHERE part_category_name like '%brick%';
 
-/* */
-SELECT
+/* Select all part categories and order alphabetically.*/
+SELECT * FROM part_categories ORDER BY part_category_name;
 
-/* */
-SELECT
-
-/* */
-SELECT (SELECT)
+/* Get all the part categories that parts that have the name legolas in them are associated with.*/
+SELECT part_category_name AS legolas_greenleaf_categories FROM part_categories WHERE part_categories.part_category_id IN (SELECT parts.part_category_id FROM parts WHERE parts.part_name like '%legolas%');
 
 
 /*
@@ -257,8 +247,8 @@ SELECT
 /* */
 SELECT
 
-/* */
-SELECT
+/* Get the average year that minifigs were released in.*/
+SELECT AVG(year_released) AS avg_year_released FROM minifigs;
 
 /* */
 SELECT (SELECT)
@@ -340,4 +330,22 @@ SELECT
 /* */
 SELECT (SELECT)
 
+#___________________________________________________________________________
+/*
+INDICES
+------------------
+*/
+#1) INDEX ON set_contents
+# This is a good choice for an index because there is a large amount of data and the table uses a compound key comprised of 3 foreign keys.
+
+# Run the query before the index:
+SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_contents GROUP BY set_id;
+#(0.44 sec)
+
+#Create the index.
+CREATE INDEX idx_set_color_quant ON set_contents (set_id, color_id, quantity);
+
+#Run the query again using the index. 
+SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_contents USE INDEX (idx_set_color_quant) GROUP BY set_id;
+#(0.19 sec) The time to execute is halved.
 
