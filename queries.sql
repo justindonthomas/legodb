@@ -142,7 +142,6 @@ UPDATE themes SET theme_parent_id = 608 WHERE theme_name like '%Disney%';
 #Delete cowboys and indians that weren't in the LEGO movie.
 DELETE FROM themes WHERE theme_parent_id NOT IN (535) AND theme_parent_id IN (475);
 
-
 /* Get all the superheor set themes that end in 'man'*/
 SELECT theme_name AS man_heroes FROM themes WHERE theme_name LIKE '%man' AND theme_parent_id = 482;
 
@@ -233,25 +232,23 @@ MINIFIGS
 ---------------
 */
 
-INSERT 
+INSERT INTO minifigs (566, NULL, 'Gimli with Axe', 2004);
 
-UPDATE
+UPDATE minifigs SET theme_id = 25 WHERE description like like '%dragon knight%';
 
-UPDATE
+UPDATE minifigs SET description = ('After 2000') WHERE year_released > 2000;
 
-DELETE
+DELETE FROM minifigs WHERE theme_id = 566 AND minifig_part_number = NULL;
 
-/* */
-SELECT
 
-/* */
-SELECT
+/* Get the id of most recent 10 minifigs released since 2017 .*/
+SELECT * FROM minifigs WHERE year_released >= 2017 ORDER BY year_released DESC LIMIT 10;
 
 /* Get the average year that minifigs were released in.*/
 SELECT AVG(year_released) AS avg_year_released FROM minifigs;
 
-/* */
-SELECT (SELECT)
+/* Get the part numbers for all of the minfigs from the minifig_contents table with a join and sort the results by the year released.*/
+SELECT * FROM minifigs RIGHT JOIN minifig_contents ON minifigs.minifig_id = minifig_contents.minifig_id ORDER BY year_released;
 
 
 /*
@@ -259,7 +256,7 @@ MINIFIG_CONTENTS
 ---------------
 */
 
-INSERT 
+INSERT INTO minifig_contents VALUES (NULL, NULL);
 
 UPDATE
 
@@ -267,8 +264,8 @@ UPDATE
 
 DELETE
 
-/* */
-SELECT
+/* Get all the part contents of each minifig where the names of the parts are available and sort them alphabetically.*/
+SELECT * FROM minifig_contents LEFT JOIN parts ON minifig_contents.part_number = parts.part_number WHERE parts.part_name IS NOT NULL ORDER BY part_name;
 
 /* */
 SELECT
