@@ -255,52 +255,49 @@ SELECT * FROM minifigs RIGHT JOIN minifig_contents ON minifigs.minifig_id = mini
 MINIFIG_CONTENTS
 ---------------
 */
+# Add a cape to Dumbledore.
+INSERT INTO minifig_contents (minifig_id, part_number) VALUES (689, '10555');
 
-INSERT INTO minifig_contents VALUES (NULL, NULL);
+#Update the outdated DUmbledore vest to be a cape.
+UPDATE minifig_contents SET part_number = '973pb0742' WHERE minifig_id = 689 AND part_number = '10555';
 
-UPDATE
+#Now change to a fancy robe with purple arms.
+UPDATE minifig_contents SET part_number = '973px149c01' WHERE part_number = '973pb0742';
 
-UPDATE
-
-DELETE
+DELETE FROM minifig_contents WHERE minifig_id = 689 AND part_number = '973px149c01';
 
 /* Get all the part contents of each minifig where the names of the parts are available and sort them alphabetically.*/
 SELECT * FROM minifig_contents LEFT JOIN parts ON minifig_contents.part_number = parts.part_number WHERE parts.part_name IS NOT NULL ORDER BY part_name;
 
-/* */
-SELECT
+/* Get the number of minifig parts of each type and display in descending order.*/
+SELECT part_number, COUNT(part_number) AS num_parts FROM minifig_contents GROUP BY part_number ORDER BY num_parts DESC;
 
-/* */
-SELECT
+/*Select all fields from minifig contents and parts where the part number is 970c00.*/
+SELECT * FROM minifig_contents JOIN parts ON minifig_contents.part_number = parts.part_number WHERE minifig_contents.part_number = '970c00';
 
-/* */
-SELECT (SELECT)
 
 
 /*
-COLORS GET TABLE BEFORE INSERTION
+COLORS 
 ---------------
 */
 
-INSERT
+INSERT INTO colors (color_id, color_name, color_code, is_transparent) VALUES (777, 'Rainbow', '777777', 0);
 
-UPDATE
+UPDATE colors SET is_transparent = 1 WHERE color_name like '%trans%' OR color_name like '%glow%';
 
-UPDATE
+UPDATE colors SET color_code = NULL WHERE color_id < 0;
 
-DELETE
+DELETE FROM colors WHERE color_code IS NULL;
 
-/* */
-SELECT
+/* Get the max color code and the name of the color.*/
+SELECT color_name, MAX(color_code) as max_code FROM colors;
 
-/* */
-SELECT
+/* Get the transparent colors.*/
+SELECT color_name AS transparent_colors FROM colors WHERE is_transparent = 1;
 
-/* */
-SELECT
-
-/* */
-SELECT (SELECT)
+/* Get the color names and codes of all spare parts.*/
+SELECT color_name, color_code FROM colors WHERE colors.color_id IN (SELECT set_contents.color_id FROM set_contents WHERE is_spare_part = 1);
 
 /*
 PART_IMAGES
