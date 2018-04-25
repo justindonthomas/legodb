@@ -1,3 +1,16 @@
+$("#favoriteInput").submit(function(event) {
+    event.preventDefault();
+    var partNum = $("#partnum").val();
+    var comment = $("#comment").val();
+    $.post('pageScripts/inputFavorites.php',
+        {
+            partnum : partNum,
+            comment : comment
+        }, function(data) {
+            alert(data);
+        });
+});
+
 $("#searchForm").submit(function(event) {
     event.preventDefault();
     var searchFor = $("#searchFor").val();

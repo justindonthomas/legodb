@@ -40,8 +40,8 @@ class DBConnection
         $sqlStatement->bind_param($types, ...$vars);
 
         $sqlStatement->execute();
-        $sqlStatement->store_result();
         $sqlStatement->bind_result(...$results);
+        $sqlStatement->store_result();
         return $sqlStatement;
     }
 
@@ -58,8 +58,11 @@ class DBConnection
         }
         $sqlStatement = $this->dbConnection->prepare($queryString);
         $sqlStatement->bind_param($types, ...$vars);
-        $sqlStatement->execute();
-        return $sqlStatement;
+        if($sqlStatement->execute()) {
+            return $sqlStatement;
+        } else {
+            return null;
+        }
     }
 
     /**

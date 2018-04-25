@@ -19,6 +19,13 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
   <?php
   echo $pageBuilder->getTopBar();
   ?>
+  <h2>Add a Favorite</h2>
+  <form id="favoriteInput" action = "/pageScripts/inputFavorites.php">
+      Part number: <input type="text" name="partnum" id="partnum">
+      Comment: <input type="text" name="comment" id="comment">
+      <input type="submit" value="Submit">
+  </form>
+  <h2>Search the Database</h2>
   <form id="searchForm" action="pageScripts/performSearch.php">
       Search For:
       <select id=searchFor onchange="createSearchByDropdown(this, document.getElementById('searchBy'))">
