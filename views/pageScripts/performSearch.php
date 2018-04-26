@@ -33,11 +33,27 @@ function performSearch(DBConnection $dbConn, string $searchFor, string $searchBy
             return setInventorySearch($dbConn, $searchBy, $searchTerms);
         case 'minifig inventory':
             return minifigInventorySearch($dbConn, $searchBy, $searchTerms);
+        case 'user':
+            return searchUser($dbConn, $searchBy, $searchTerms);
         default:
             return '';
     }
 }
 
+function searchUser(DBConnection $dbConn, string $searchBy, string $searchTerms) {
+    $columnNames = array('username', 'email', 'is admin');
+    $queryBase = "SELECT username, email, is_admin FROM users";
+    switch($searchBy) {
+        case 'user name':
+            return strEquivalenceSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'username');
+        case 'email':
+            return strEquivalenceSearch($dbConn, $queryBase, $searchTerms, $columnNames, 'email');
+        case 'all':
+            return buildTableString($dbConn->executeSimpleQuery($queryBase), $columnNames);
+        default:
+            return '';
+    }
+}
 /**
  * Decides what to do during a search on the minifigs table.
  * @param DBConnection $dbConn mysqli database connection.

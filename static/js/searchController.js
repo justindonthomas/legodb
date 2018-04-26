@@ -28,7 +28,7 @@ $("#searchForm").submit(function(event) {
 });
 
 function createSearchByDropdown(searchFor, searchBy) {
-    var userSearchTerms = ['user name', 'email'];
+    var userSearchTerms = ['user name', 'email', 'all'];
     var standardSearchTerms = ['part id', 'description', 'year', 'theme'];
     searchBy.options.length = 0;
     switch(searchFor.value) {
