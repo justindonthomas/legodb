@@ -10,9 +10,10 @@ $dbConnection = new DBConnection($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_NAME);
 
 $searchFor = $_POST['searchfor'];
 $searchBy = $_POST['searchby'];
+$colorTerm = $_POST['colorTerms'];
 $searchTerms = $dbConnection->getEscapedString($_POST['searchterms']);
 
-$searchResults = performSearch($dbConnection, $searchFor, $searchBy, $searchTerms);
+$searchResults = performSearch($dbConnection, $searchFor, $searchBy, $searchTerms, $colorTerm, $IMG_PATH_ROOT);
 
 echo $searchResults;
 
@@ -22,9 +23,12 @@ echo $searchResults;
  * @param string $searchFor Table to search in.
  * @param string $searchBy Method to search by.
  * @param string $searchTerms Provided string to search on.
+ * @param string $colorTerm Color search term index field value.
+ * @param string $pathRoot Base of path to images.
  * @return string An html table containing the search results.
  */
-function performSearch(DBConnection $dbConn, string $searchFor, string $searchBy, string $searchTerms) {
+function performSearch(DBConnection $dbConn, string $searchFor, string $searchBy, string $searchTerms,
+                        string $colorTerm, string $pathRoot) {
     switch ($searchFor) {
         case 'minifig':
             return minifigSearch($dbConn, $searchBy, $searchTerms);
@@ -38,9 +42,24 @@ function performSearch(DBConnection $dbConn, string $searchFor, string $searchBy
             return minifigInventorySearch($dbConn, $searchBy, $searchTerms);
         case 'user':
             return searchUser($dbConn, $searchBy, $searchTerms);
+        case 'image':
+            return searchImage($dbConn, $searchTerms, $colorTerm, $pathRoot);
         default:
             return '';
     }
+}
+
+function searchImage(DBConnection $dbConn, string $searchTerms, string $colorTerm, string $pathRoot) {
+    //get colorId
+    $queryString = "SELECT color_id FROM colors WHERE color_name = ?";
+    $result = $dbConn->executePreparedSelect($queryString, 's', array($colorTerm), $colorId);
+    $result->fetch();
+
+    $queryString = "SELECT image FROM part_images WHERE part_number = ? AND color_id = ?";
+    $result = $dbConn->executePreparedSelect($queryString, 'si', array($searchTerms, $colorId), $pathEnd);
+    $result->fetch();
+    $fullPath = $pathRoot.$pathEnd;
+    return '<img src="'.$fullPath.'"  alt="image not found." class="center">';
 }
 
 function searchUser(DBConnection $dbConn, string $searchBy, string $searchTerms) {

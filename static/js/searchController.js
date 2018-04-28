@@ -66,6 +66,7 @@ function createSearchByDropdown(searchFor, searchBy, colorTerm) {
             break;
         case "image":
             colorTerm.style.display = "block";
+            searchBy.options.add(createListOption('Part id and Color'));
             break;
         default:
             //create general search options

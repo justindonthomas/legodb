@@ -19,7 +19,7 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
       <link href="../static/css/standard_styles.css" rel="stylesheet">
       <script type="text/javascript" src="../lib/jquery-3.3.1.min.js"></script>
   </head>
-  <body background="../img/legos.jpg">
+  <body>
   <?php
   echo $pageBuilder->getTopBar();
   ?>

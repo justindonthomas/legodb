@@ -11,8 +11,20 @@
     background-size: auto;
 }
 
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 .outline {
     border: 1px solid black;
+}
+
+body {
+    min-height: 640px;
+    background-image: url("../../img/legos.jpg");
+    background-repeat: no-repeat;
+    background-position: bottom right;
 }
 
 table, tr, td {
