@@ -15,6 +15,10 @@ USERS
 
 INSERT INTO users (username) VALUES ('genericUser');
 
+INSERT INTO users (username) VALUES ('passUser1');
+
+INSERT INTO users (username) VALUES ('passUser2');
+
 UPDATE users SET is_admin = 1 WHERE username = 'bobothedog';
 
 UPDATE users SET email = 'genericemail@email.email', is_admin = 0 WHERE username = 'genericUser';
@@ -42,25 +46,27 @@ PASSWORDS
 ---------------
 */
 
-#INSERT 
+#passUser2
+INSERT INTO passwords (user_id, password) VALUES ((SELECT user_id from users ORDER BY user_id DESC LIMIT 1), ''); 
 
-#UPDATE
+#passUser1
+INSERT INTO passwords (user_id, password) VALUES ((SELECT user_id from users ORDER BY user_id DESC LIMIT 1 OFFSET 1), '');
 
-#UPDATE
+UPDATE passwords SET password = 'default' WHERE password = '';
 
-#DELETE
+UPDATE passwords SET password = 'passUser2' WHERE user_id = (SELECT user_id from users ORDER BY user_id DESC LIMIT 1);
 
-/* */
-#SELECT
+DELETE FROM passwords WHERE password = 'default';
 
-/* */
-#SELECT
+/* Show all entries in the passwords table.*/
+SELECT * FROM passwords;
 
-/* */
-#SELECT
+/* Get the most recently added user id and password.*/
+SELECT user_id AS last_added, password AS pwd FROM passwords WHERE user_id = (SELECT user_id from users ORDER BY user_id DESC LIMIT 1);
 
-/* */
-#SELECT (SELECT)
+
+/* Check the security of passwords of all non-admins (are they hashed and salted?) No, because we added one manually here.*/
+SELECT password AS non_admin_pwds from passwords WHERE passwords.user_id IN (SELECT user_id FROM users WHERE users.is_admin = 0);
 
 
 /*
@@ -302,8 +308,7 @@ SELECT color_name, color_code FROM colors WHERE colors.color_id IN (SELECT set_c
 /*
 PART_IMAGES
 ---------------
-
-
+*/
 
 INSERT 
 
@@ -313,17 +318,15 @@ UPDATE
 
 DELETE
 
-/* */
-#SELECT
+/* Get all the images of parts that have a color that contains the word salmon.*/
+SELECT * FROM part_images WHERE image like "%salmon%";
 
 /* */
-#SELECT
+SELECT
 
 /* */
-#SELECT
+SELECT color_id, part_number, image FROM part_images, color_name FROM colors WHERE part_images.color_id in (SELECT colors.color_id FROM colors) ORDER BY colors.color_name;
 
-/* */
-#SELECT (SELECT)
 
 
 #___________________________________________________________________________
@@ -331,8 +334,7 @@ DELETE
 INDICES
 ------------------
 */
-#1) INDEX ON set_contents
-# This is a good choice for an index because there is a large amount of data and the table uses a compound key comprised of 3 foreign keys.
+#1) INDEX ON set_contents: This is a good choice for an index because this is our largest table.
 
 # Run the query before the index:
 SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_contents GROUP BY set_id;
@@ -344,4 +346,10 @@ CREATE INDEX idx_set_color_quant ON set_contents (set_id, color_id, quantity);
 #Run the query again using the index. 
 SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_contents USE INDEX (idx_set_color_quant) GROUP BY set_id;
 #(0.19 sec) The time to execute is halved.
+
+#2) INDEX ON PART_IMAGES: 
+
+# RUn the query before the index:
+$SELECT color_id, part_number, image FROM part_images, color_name FROM colors WHERE part_images.color_id in (SELECT colors.color_id FROM colors) ORDER BY colors.color_name;
+
 
