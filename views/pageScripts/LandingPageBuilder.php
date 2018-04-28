@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jdt
- * Date: 4/12/18
- * Time: 2:42 PM
+ * Help build the landing page.
  */
 
 class LandingPageBuilder
@@ -20,7 +17,7 @@ class LandingPageBuilder
 
     public function getTopBar() {
         return '<span class="leftalign"> Logged in as: '.$this->userName.'</span>
-                <span class="rightalign"><a href="pageScripts/logout.php">Log Out.</a></span> <br>';
+                <span class="rightalign"><a href="logout.php">Log Out.</a></span> <br>';
     }
 
     public function getSearchOptions() {
@@ -30,7 +27,8 @@ class LandingPageBuilder
                 <option value="set"> set </option>
                 <option value="set inventory"> set inventory </option>
                 <option value="minifig inventory"> minifig inventory </option>
-                <option value="my favorites"> my favorites </option>';
+                <option value="my favorites"> my favorites </option>
+                <option value="image"> image </option>';
         if($this->isAdmin) {
             $optionsString = $optionsString.'<option value="user"> user </option>';
         }

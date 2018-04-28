@@ -1,5 +1,6 @@
 <?php
 include_once "pageScripts/LandingPageBuilder.php";
+include_once "../config/configs.php";
 session_start();
 if (!isset($_SESSION['s_user'])) {
       header('location: ../index.html');
@@ -20,7 +21,7 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
   echo $pageBuilder->getTopBar();
   ?>
   <h2>Add a Favorite</h2>
-  <form id="favoriteInput" action = "/pageScripts/inputFavorites.php">
+  <form id="favoriteInput" action = "pageScripts/inputFavorites.php">
       Part number: <input type="text" name="partnum" id="partnum">
       Comment: <input type="text" name="comment" id="comment">
       <input type="submit" value="Submit">
@@ -28,7 +29,7 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
   <h2>Search the Database</h2>
   <form id="searchForm" action="pageScripts/performSearch.php">
       Search For:
-      <select id=searchFor onchange="createSearchByDropdown(this, document.getElementById('searchBy'))">
+      <select id=searchFor onchange="createSearchByDropdown(this, document.getElementById('searchBy'), document.getElementById('colorInput'))">
           <?php
           echo $pageBuilder->getSearchOptions();
           ?>
@@ -37,6 +38,9 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
       <select id="searchBy">
       </select>
       Search term:<input type="text" id="searchTerms">
+      <div id="colorInput">
+        Color: <input type="text" id="colorTerm">
+      </div>
       <input type="submit">
   </form>
   <div id="results"></div>
