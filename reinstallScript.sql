@@ -12,5 +12,5 @@ DROP TABLE sets;
 DROP TABLE themes;
 DROP TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;
-source structure0428_sql.sql;
-source data0428_sql.sql;
+source structure.sql;
+source data.sql;
