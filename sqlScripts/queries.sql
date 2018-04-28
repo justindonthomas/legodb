@@ -34,7 +34,7 @@ SELECT username, is_admin, email FROM users AS info WHERE email like '%awesome%'
 SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id from favorite_sets);
 
 /* Get all the usernames and email addresses of users who don't have a favorite set. */
-SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id where comment = NULL);
+SELECT username, email from users where users.user_id in (SELECT favorite_sets.user_id from favorite_sets where comment IS NULL);
 
 			
 /*
@@ -42,25 +42,25 @@ PASSWORDS
 ---------------
 */
 
-INSERT 
+#INSERT 
 
-UPDATE
+#UPDATE
 
-UPDATE
+#UPDATE
 
-DELETE
-
-/* */
-SELECT
+#DELETE
 
 /* */
-SELECT
+#SELECT
 
 /* */
-SELECT
+#SELECT
 
 /* */
-SELECT (SELECT)
+#SELECT
+
+/* */
+#SELECT (SELECT)
 
 
 /*
@@ -78,7 +78,7 @@ UPDATE favorite_sets SET set_id = 3345, comment = 'Battle of Helm\'s Deep' WHERE
 
 UPDATE favorite_sets SET set_id = 224, comment = 'NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA LOBSTER! LOBSTER!' WHERE user_id = 5;
 
-DELETE FROM favorite_sets WHERE favorite_sets.set_id in (SELECT sets.set_id WHERE set_name like 'Pooh\'s Corner');
+DELETE FROM favorite_sets WHERE favorite_sets.set_id in (SELECT sets.set_id from sets WHERE sets.set_name like 'Pooh\'s Corner');
 
 UPDATE favorite_sets SET set_id = 4586, comment = 'Tower of Orthanc, Minifigs = Gandalf the Grey, Saruman the White, Orc x 2' WHERE favorite_id = 3 and favorite_sets.user_id in (SELECT users.user_id from users WHERE users.username = 'elyzabeth');
 
@@ -140,7 +140,7 @@ UPDATE themes SET theme_parent_id = 566 WHERE theme_name = '"They\re Taking the 
 UPDATE themes SET theme_parent_id = 608 WHERE theme_name like '%Disney%';
 
 #Delete cowboys and indians that weren't in the LEGO movie.
-DELETE FROM themes WHERE theme_parent_id NOT IN (535) AND theme_parent_id IN (475);
+DELETE FROM themes WHERE theme_parent_id IN (568) AND theme_name like ('"%Hobbits%Isengard%"');
 
 /* Get all the superheor set themes that end in 'man'*/
 SELECT theme_name AS man_heroes FROM themes WHERE theme_name LIKE '%man' AND theme_parent_id = 482;
@@ -180,14 +180,14 @@ PARTS
 */
 
 #13 is the part_category_id for minifigs.
-INSERT INTO parts VALUES (13, 'Microfig Head dual sided Gandalf the White, smile/angry')
+INSERT INTO parts VALUES ('abc123GAN', 13, 'Microfig Head dual sided Gandalf the White, smile/angry');
 
-INSERT INTO parts VALUES (0, 'deletable entry');
+#57 is the part category for non-buildable figures
+INSERT INTO parts VALUES ('DEL123', 57, 'deletable entry');
 
-#Move minifg accessories into the broader minfig category.
-UPDATE parts SET part_category_id = 13 WHERE part_category_id = 27;
+UPDATE parts SET part_name = 'Smile/Angry Gandalf head' WHERE part_category_id = 13 AND part_number = 'abc123GAN';
 
-UPDATE parts SET part_category_id = 43 WHERE part_name like '%saruman%';
+UPDATE parts SET part_name = 'Deletable' WHERE part_category_id = 57 AND part_number = 'DEL123';
 
 DELETE FROM parts WHERE part_name like 'deletable%';
 
@@ -209,13 +209,13 @@ PART_CATEGORIES
 ---------------
 */
 
-INSERT INTO part_categories VALUES ('Other');
+INSERT INTO part_categories (part_category_name) VALUES ('Others');
 
 UPDATE part_categories SET part_category_name = 'Bricks, Curved' WHERE part_category_name = 'Bricks Curved';
 
 UPDATE part_categories SET part_category_name = 'Rocks' WHERE part_category_name = 'Rock';
 
-DELETE FROM part_categories WHERE part_categories = 'Non-LEGO';
+DELETE FROM part_categories WHERE part_category_name = 'Others';
 
 /* Get all the part categories that have to do with bricks.*/
 SELECT * FROM part_categories WHERE part_category_name like '%brick%';
@@ -232,9 +232,9 @@ MINIFIGS
 ---------------
 */
 
-INSERT INTO minifigs (566, NULL, 'Gimli with Axe', 2004);
+INSERT INTO minifigs (theme_id, minifig_part_number, description, year_released) VALUES (566, NULL, 'Gimli with Axe', 2004);
 
-UPDATE minifigs SET theme_id = 25 WHERE description like like '%dragon knight%';
+UPDATE minifigs SET theme_id = 25 WHERE description like '%dragon knight%';
 
 UPDATE minifigs SET description = ('After 2000') WHERE year_released > 2000;
 
@@ -302,7 +302,8 @@ SELECT color_name, color_code FROM colors WHERE colors.color_id IN (SELECT set_c
 /*
 PART_IMAGES
 ---------------
-*/
+
+
 
 INSERT 
 
@@ -313,16 +314,17 @@ UPDATE
 DELETE
 
 /* */
-SELECT
+#SELECT
 
 /* */
-SELECT
+#SELECT
 
 /* */
-SELECT
+#SELECT
 
 /* */
-SELECT (SELECT)
+#SELECT (SELECT)
+
 
 #___________________________________________________________________________
 /*
