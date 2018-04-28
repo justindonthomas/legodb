@@ -1,4 +1,7 @@
 <?php
+/**
+ * Main page for accessing the database.
+ */
 include_once "pageScripts/LandingPageBuilder.php";
 include_once "../config/configs.php";
 session_start();

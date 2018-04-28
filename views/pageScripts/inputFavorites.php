@@ -18,7 +18,6 @@ $setId = $result->fetch_assoc()['set_id'];
 $queryString = "INSERT INTO favorite_sets (user_id, set_id, comment)
                 VALUES (?, ?, ?)";
 $result = $dbConnection->executePreparedStatement($queryString, 'iss', $userId, $setId, $commentStr);
-//$result = $dbConnection->executeSimpleQuery($queryString);
 $userFeedback = '';
 if(!$result) {
     $userFeedback = "Failed to insert favorite\n";

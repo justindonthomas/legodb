@@ -1,0 +1,16 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE colors;
+DROP TABLE favorite_sets;
+DROP TABLE minifig_contents;
+DROP TABLE minifigs;
+DROP TABLE part_categories;
+DROP TABLE part_images;
+DROP TABLE parts;
+DROP TABLE passwords;
+DROP TABLE set_contents;
+DROP TABLE sets;
+DROP TABLE themes;
+DROP TABLE users;
+SET FOREIGN_KEY_CHECKS = 1;
+source structure0428_sql.sql;
+source data0428_sql.sql;

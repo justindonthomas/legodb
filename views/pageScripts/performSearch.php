@@ -1,4 +1,7 @@
 <?php
+/**
+ * Connect to the database and perform a search given the parameters in the post.
+ */
 include_once '../../config/configs.php';
 include_once '../../static/php/DBConnection.php';
 session_start();

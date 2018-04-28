@@ -1,3 +1,6 @@
+/**
+ * Upon entering a favorite set, post to inputFavorites.php
+ */
 $("#favoriteInput").submit(function(event) {
     event.preventDefault();
     var partNum = $("#partnum").val();
@@ -11,6 +14,9 @@ $("#favoriteInput").submit(function(event) {
         });
 });
 
+/**
+ * Search database form submit.
+ */
 $("#searchForm").submit(function(event) {
     event.preventDefault();
     var searchFor = $("#searchFor").val();
@@ -29,6 +35,13 @@ $("#searchForm").submit(function(event) {
         } );
 });
 
+/**
+ * Generate the dropdown menu for the 'search by' options based on the 'search for' provided
+ * by the user.
+ * @param searchFor First dropdown menu object.
+ * @param searchBy Second dropdown menu object.
+ * @param colorTerm Second input field for use in part image searches.
+ */
 function createSearchByDropdown(searchFor, searchBy, colorTerm) {
     var userSearchTerms = ['user name', 'email', 'all'];
     var standardSearchTerms = ['part id', 'description', 'year', 'theme'];
@@ -63,6 +76,11 @@ function createSearchByDropdown(searchFor, searchBy, colorTerm) {
     }
 }
 
+/**
+ * Helper method to generate options for dropdown lists.
+ * @param term text and value to provide.
+ * @returns {HTMLOptionElement}
+ */
 function createListOption(term) {
     var opt = document.createElement('option');
     opt.text = term;

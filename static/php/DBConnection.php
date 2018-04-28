@@ -1,6 +1,6 @@
 <?php
 /**
- * A wrapper for a mysqli object that allows the us
+ * A wrapper for a mysqli object that allows the user to access the database.
  */
 class DBConnection
 {
