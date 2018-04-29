@@ -4,8 +4,8 @@ structure.sql, then run data.sql.
 The required demo queries are included in queries.sql and
 can be run once the database is installed.
 
-To use the web interface for our project, the file config/configs.php
-must be altered to point to the database.
+The application for our project is a web interface.
+The file [Document Root]/config/configs.php must be altered to point to the database.
 The following variables must be set in this file:
 
 $DB_HOST = the host server for the database.
@@ -13,7 +13,7 @@ $DB_USER = The database user name.
 $DB_PASSWORD = The database password.
 $DB_NAME = The name of the database to use.
 
-The entry point for the database will be at
+The entry point for the database will be at:
 [Document Root]/cs464/index.html
 
 Logins included with the database are:
