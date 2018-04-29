@@ -1,3 +1,9 @@
+To install the database, from inside mysql, first run
+structure.sql, then run data.sql.
+
+The required demo queries are included in queries.sql and
+can be run once the database is installed.
+
 To use the web interface for our project, the file config/configs.php
 must be altered to point to the database.
 The following variables must be set in this file:
