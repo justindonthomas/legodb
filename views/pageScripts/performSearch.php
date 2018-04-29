@@ -136,14 +136,14 @@ function setSearch(DBConnection $dbConn, string $searchBy, string $searchTerms) 
  */
 function setInventorySearch(DBConnection $dbConn, string $searchBy, string $searchTerms) {
     $columnNames = array('part number', 'part description', 'color', 'quantity', 'is spare');
-    $whereColumn = ' set_id = ';
+    $whereColumn = ' set_num = ';
     $param = $whereColumn."'".$searchTerms."')";
     $queryBase = "SELECT parts.part_number, part_name, color_name, quantity, is_spare_part FROM set_contents
                   INNER JOIN colors ON set_contents.color_id = colors.color_id
                   INNER JOIN parts ON set_contents.part_number = parts.part_number
-                  WHERE set_id = (SELECT set_id FROM sets WHERE ";
+                  WHERE set_id IN (SELECT set_id FROM sets WHERE ";
     $queryString = $queryBase.$param;
-     //return $queryString;
+    //return $queryString;
     return buildTableString($dbConn->executeSimpleQuery($queryString), $columnNames);
 }
 
@@ -166,10 +166,11 @@ function minifigInventorySearch(DBConnection $dbConn, string $searchBy, string $
  * @return string Html table representing search results.
  */
 function favoritesSearch(DBConnection $dbConn, string $userId) {
-    $columnNames = array('set number', 'name', 'theme', 'year released');
-    $queryString = "SELECT set_num, set_name, theme_name, year_released FROM sets 
+    $columnNames = array('set number', 'name', 'theme', 'year released', 'comment');
+    $queryString = "SELECT set_num, set_name, theme_name, year_released, comment FROM sets 
                     INNER JOIN themes ON sets.theme_id = themes.theme_id
-                    WHERE set_id IN (SELECT set_id FROM favorite_sets WHERE user_id = ".$userId.")";
+                    INNER JOIN favorite_sets ON sets.set_id = favorite_sets.set_id
+                    WHERE favorite_sets.user_id = ".$userId;
     return buildTableString($dbConn->executeSimpleQuery($queryString), $columnNames);
 }
 

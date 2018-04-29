@@ -15,7 +15,7 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
 <!DOCTYPE html>
 <html>
   <head>
-      <title>Your Home Page</title>
+      <title>LEGO Visual Database</title>
       <link href="../static/css/standard_styles.css" rel="stylesheet">
       <script type="text/javascript" src="../lib/jquery-3.3.1.min.js"></script>
   </head>
@@ -24,15 +24,17 @@ $pageBuilder = new LandingPageBuilder($_SESSION);
   echo $pageBuilder->getTopBar();
   ?>
   <fieldset class="blueback">
-    <legend><h2>Add a Favorite</h2></legend>
+      <h2>Add a Favorite Set</h2>
+    <legend></legend>
     <form id="favoriteInput" action = "pageScripts/inputFavorites.php">
-        Part number: <input type="text" name="partnum" id="partnum">
+        Set number: <input type="text" name="partnum" id="partnum">
         Comment: <input type="text" name="comment" id="comment">
         <input type="submit" value="Submit">
     </form>
   </fieldset>
   <fieldset class="blueback">
-      <legend><h2>Search the Database</h2></legend>
+      <h2>Search the Database</h2>
+      <legend></legend>
     <form id="searchForm" action="pageScripts/performSearch.php">
         Search For:
         <select id=searchFor onchange="createSearchByDropdown(this, document.getElementById('searchBy'), document.getElementById('colorInput'))">

@@ -16,7 +16,7 @@ class LandingPageBuilder
     }
 
     public function getTopBar() {
-        return '<div class="blueback outline">
+        return '<div class="blueback">
                 <span class="leftalign"> Logged in as: '.$this->userName.'</span>
                 <span class="rightalign"><a href="pageScripts/logout.php">Log Out.</a></span> <br>
                 </div>';
