@@ -310,26 +310,28 @@ PART_IMAGES
 ---------------
 */
 
-INSERT 
+#9999 is no color
+INSERT INTO part_images (30000, '3738', '/Light Bluish Gray/3738.png');
 
-UPDATE
+UPDATE part_images SET image = '/Light Bluish Gray/3736.png' WHERE image = '/Light Bluish Gray/3738.png';
 
-UPDATE
+UPDATE part_images set part_number = '3736' where part_number = '3738' and image = '/Light Bluish Gray/3738.png';
 
-DELETE
+DELETE FROM part_images WHERE color_id = 30000;
 
-/* Get all the images of parts that have a color that contains the word salmon.*/
-SELECT * FROM part_images WHERE image like "%salmon%";
+/* Get all the images of parts that have a color that contains the word salmon. (includes light salmon, etc.)*/
+SELECT * FROM part_images WHERE image like "%salmon%" ORDER BY part_number;
 
-/* */
-SELECT
+/* Get the images for all parts with color ids between 50 and 54. (These are some of the transparent colors.)*/
+SELECT image AS some_transparents FROM part_images WHERE color_id >= 50 AND color_id < 55;
 
-/* */
-SELECT color_id, part_number, image FROM part_images, color_name FROM colors WHERE part_images.color_id in (SELECT colors.color_id FROM colors) ORDER BY colors.color_name;
+/* Join the part_images and colors tables. This is a nice clean join as each part image has a corresponding color id. Learn the color code for each part image.*/
+SELECT * FROM part_images JOIN colors on part_images.color_id = colors.color_id;
 
 
 
 #___________________________________________________________________________
+
 /*
 INDICES
 ------------------
@@ -341,15 +343,24 @@ SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_cont
 #(0.44 sec)
 
 #Create the index.
-CREATE INDEX idx_set_color_quant ON set_contents (set_id, color_id, quantity);
+CREATE INDEX idx_set_cont ON set_contents (set_id, color_id, quantity);
 
 #Run the query again using the index. 
-SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_contents USE INDEX (idx_set_color_quant) GROUP BY set_id;
+SELECT set_id, COUNT(set_id), color_id, quantity AS types_of_parts FROM set_contents USE INDEX(idx_set_cont) GROUP BY set_id;
 #(0.19 sec) The time to execute is halved.
 
-#2) INDEX ON PART_IMAGES: 
-
+#2) INDEX ON PART_IMAGES AND COLORS: Attempt to speed up a full join.
 # RUn the query before the index:
-$SELECT color_id, part_number, image FROM part_images, color_name FROM colors WHERE part_images.color_id in (SELECT colors.color_id FROM colors) ORDER BY colors.color_name;
+SELECT * FROM part_images JOIN colors on part_images.color_id = colors.color_id ;
+#(0.27 sec)
+
+#Create the index.
+CREATE INDEX idx_p_img ON part_images (color_id, part_number);
+CREATE index idx_colors ON colors (color_id);
+
+#Run the join forcing both indices to be used.
+SELECT * FROM part_images force INDEX(idx_p_img) JOIN colors force INDEX(idx_colors) on part_images.color_id = colors.color_id;
+#(0.27 sec) No improvement in performance is seen.
+
 
 
